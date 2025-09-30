@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Air Source Heating Eligibility Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .form-card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 8px;
+      height: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #4CAF50;
+      transition: width 0.3s ease;
+    }
+
+    .question {
+      display: none;
+    }
+
+    .question.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+    }
+
+    .options label {
+      display: block;
+      padding: 10px;
+      margin: 8px 0;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .options input[type="radio"] {
+      display: none;
+    }
+
+    .options label:hover {
+      background: #eee;
+    }
+
+    .options input[type="radio"]:checked + label {
+      background: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    #thanks {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-card">
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <div id="form-container">
+    <!-- Question 1 -->
+    <div class="question active" id="q1">
+      <p>How do you currently heat your home?</p>
+      <div class="options">
+        <input type="radio" name="q1" value="Gas" id="q1a1"><label for="q1a1">Gas</label>
+        <input type="radio" name="q1" value="Electric" id="q1a2"><label for="q1a2">Electric</label>
+        <input type="radio" name="q1" value="Oil" id="q1a3"><label for="q1a3">Oil</label>
+        <input type="radio" name="q1" value="LPG" id="q1a4"><label for="q1a4">LPG</label>
+        <input type="radio" name="q1" value="Solid Fuel" id="q1a5"><label for="q1a5">Solid Fuel</label>
+        <input type="radio" name="q1" value="Other" id="q1a6"><label for="q1a6">Other</label>
+      </div>
+      <button onclick="nextQuestion(1)">Next</button>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question" id="q2">
+      <p>Is your heating system currently working?</p>
+      <div class="options">
+        <input type="radio" name="q2" value="Yes, it is 100% working" id="q2a1"><label for="q2a1">Yes, it is 100% working</label>
+        <input type="radio" name="q2" value="Yes, but with some minor issues" id="q2a2"><label for="q2a2">Yes, but with some minor issues</label>
+        <input type="radio" name="q2" value="No, it's completely broken" id="q2a3"><label for="q2a3">No, it's completely broken</label>
+      </div>
+      <button onclick="nextQuestion(2)">Next</button>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question" id="q3">
+      <p>How many radiators do you have in your home?</p>
+      <select id="q3select">
+        <option value="">Select number</option>
+        <option value="UFH">UFH</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20+">20+</option>
+      </select>
+      <button onclick="nextQuestion(3)">Next</button>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="question" id="q4">
+      <p>What is your home's main wall type?</p>
+      <select id="q4select">
+        <option value="">Select</option>
+        <option value="Cavity Wall">Cavity Wall</option>
+        <option value="Solid Stone">Solid Stone</option>
+        <option value="Solid Brick">Solid Brick</option>
+        <option value="Other">Other</option>
+        <option value="Not Sure">Not Sure</option>
+      </select>
+      <button onclick="nextQuestion(4)">Next</button>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="question" id="q5">
+      <p>Do you have a loft with insulation?</p>
+      <select id="q5select">
+        <option value="">Select</option>
+        <option value="Loft with insulation">Loft with insulation</option>
+        <option value="Loft without insulation">Loft without insulation</option>
+        <option value="Flat Roof / No Loft">Flat Roof / No Loft</option>
+        <option value="Loft Conversion">Loft Conversion</option>
+        <option value="Other/Not Sure">Other/Not Sure</option>
+      </select>
+      <button onclick="nextQuestion(5)">Next</button>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="question" id="q6">
+      <p>When was your home built?</p>
+      <select id="q6select">
+        <option value="">Select</option>
+        <option value="Before 1949">Before 1949</option>
+        <option value="1950 - 1982">1950 - 1982</option>
+        <option value="1983 - 1995">1983 - 1995</option>
+        <option value="1996 - 2006">1996 - 2006</option>
+        <option value="2007 - 2011">2007 - 2011</option>
+        <option value="2012 Onwards">2012 Onwards</option>
+      </select>
+      <button onclick="nextQuestion(6)">Next</button>
+    </div>
+
+    <!-- Question 7 -->
+    <div class="question" id="q7">
+      <p>What type of property do you live in?</p>
+      <select id="q7select">
+        <option value="">Select</option>
+        <option value="Detached">Detached</option>
+        <option value="Semi-Detached">Semi-Detached</option>
+        <option value="Terraced">Terraced</option>
+        <option value="Bungalow">Bungalow</option>
+        <option value="Flat">Flat</option>
+        <option value="Other">Other</option>
+      </select>
+      <button onclick="nextQuestion(7)">Next</button>
+    </div>
+
+    <!-- Question 8 -->
+    <div class="question" id="q8">
+      <p>Do you own this property?</p>
+      <select id="q8select">
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+      <button onclick="nextQuestion(8)">Next</button>
+    </div>
+
+    <!-- Question 9 -->
+    <div class="question" id="q9">
+      <p>Please enter your postcode (UK only)</p>
+      <input type="text" id="q9input" placeholder="e.g. L1 2AB">
+      <button onclick="nextQuestion(9)">Next</button>
+    </div>
+
+    <!-- Question 10 -->
+    <div class="question" id="q10">
+      <p>House number / name</p>
+      <input type="text" id="q10input">
+      <button onclick="nextQuestion(10)">Next</button>
+    </div>
+
+    <!-- Question 11 -->
+    <div class="question" id="q11">
+      <p>When are you considering getting air source heating installed?</p>
+      <select id="q11select">
+        <option value="">Select</option>
+        <option value="ASAP">ASAP</option>
+        <option value="1 - 2 Months">1 - 2 Months</option>
+        <option value="3 - 6 Months">3 - 6 Months</option>
+      </select>
+      <button onclick="nextQuestion(11)">Next</button>
+    </div>
+
+    <!-- Question 12 -->
+    <div class="question" id="q12">
+      <p>Where should we send your results?</p>
+      <input type="text" id="fname" placeholder="First Name" required>
+      <input type="text" id="lname" placeholder="Last Name" required>
+      <input type="tel" id="phone" placeholder="UK Phone Number" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <button onclick="submitForm()">Submit</button>
+    </div>
+
+    <!-- Thanks message -->
+    <div id="thanks" style="display:none;">
+      <p>✅ Thank you! We’ll check your eligibility and send results shortly.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+let formData = {};
+let totalQuestions = 12;
+
+// Next question logic
+function nextQuestion(num) {
+  let value = null;
+
+  // Radio inputs
+  if (document.querySelector('#q' + num + ' input[type="radio"]:checked')) {
+    value = document.querySelector('#q' + num + ' input[type="radio"]:checked').value;
+  } 
+  // Select dropdowns
+  else if (document.querySelector('#q' + num + ' select')) {
+    let sel = document.querySelector('#q' + num + ' select');
+    if (sel.value) value = sel.value;
+  } 
+  // Text inputs
+  else if (document.querySelector('#q' + num + ' input[type="text"], #q' + num + ' input[type="tel"], #q' + num + ' input[type="email"]')) {
+    let input = document.querySelector('#q' + num + ' input');
+    if (input.value.trim()) value = input.value.trim();
+  }
+
+  if (!value) {
+    alert("Please complete this question.");
+    return;
+  }
+
+  formData['q'+num] = value;
+
+  document.getElementById('q'+num).classList.remove("active");
+  if (num+1 <= totalQuestions) {
+    document.getElementById('q'+(num+1)).classList.add("active");
+  }
+
+  updateProgress(num);
+}
+
+// Update progress bar
+function updateProgress(current) {
+  let percent = (current / totalQuestions) * 100;
+  document.getElementById("progress").style.width = percent + "%";
+}
+
+// Submit form
+function submitForm() {
+  let fname = document.getElementById('fname').value.trim();
+  let lname = document.getElementById('lname').value.trim();
+  let phone = document.getElementById('phone').value.trim();
+  let email = document.getElementById('email').value.trim();
+
+  // UK phone validation
+  let phoneRegex = /^(?:0\d{10}|\+44\d{10})$/;
+  if (!phoneRegex.test(phone)) {
+    alert("Please enter a valid UK phone number (e.g. 07123456789 or +447123456789).");
+    return;
+  }
+
+  // Email validation
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  if (!fname || !lname) {
+    alert("Please enter your first and last name.");
+    return;
+  }
+
+  formData['fname'] = fname;
+  formData['lname'] = lname;
+  formData['phone'] = phone;
+  formData['email'] = email;
+
+  // ✅ Send data to Google Sheets
+  fetch("https://script.google.com/macros/s/AKfycbyQ9JxhAbD_gdNjAIm9h_3RHOfYMwxhAcmvpF3wGhIYTiq4KZp1F9iLAqR4uqiNEieRwA/exec", { // replace with your Web App URL
+    method: "POST",
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.result === "success") {
+      document.getElementById('q12').classList.remove("active");
+      document.getElementById('thanks').style.display = 'block';
+      updateProgress(totalQuestions);
+    } else {
+      alert("Error sending data. Try again.");
+      console.log(data);
+    }
+  })
+  .catch(err => {
+    alert("Error sending data. Check console.");
+    console.log(err);
+  });
+}
+</script>
+
+</body>
+</html>
