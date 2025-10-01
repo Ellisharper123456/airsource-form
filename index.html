@@ -278,29 +278,56 @@
     }
 
     function submitForm() {
-      let fname = document.getElementById('fname').value.trim();
-      let lname = document.getElementById('lname').value.trim();
-      let phone = document.getElementById('phone').value.trim();
-      let email = document.getElementById('email').value.trim();
+  let fname = document.getElementById('fname').value.trim();
+  let lname = document.getElementById('lname').value.trim();
+  let phone = document.getElementById('phone').value.trim();
+  let email = document.getElementById('email').value.trim();
 
-      let phoneRegex = /^(?:0\d{10}|\+44\d{10})$/;
-      if (!phoneRegex.test(phone)) { alert("Please enter a valid UK phone number."); return; }
+  // Validation
+  let phoneRegex = /^(?:0\d{10}|\+44\d{10})$/;
+  if (!phoneRegex.test(phone)) { alert("Please enter a valid UK phone number."); return; }
 
-      let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) { alert("Please enter a valid email address."); return; }
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) { alert("Please enter a valid email address."); return; }
 
-      if (!fname || !lname) { alert("Please enter your first and last name."); return; }
+  if (!fname || !lname) { alert("Please enter your first and last name."); return; }
 
-      formData['fname'] = fname;
-      formData['lname'] = lname;
-      formData['phone'] = phone;
-      formData['email'] = email;
+  // Build form data
+  let form = new FormData();
+  form.append("fname", fname);
+  form.append("lname", lname);
+  form.append("phone", phone);
+  form.append("email", email);
 
-      // Collect all answers
-      for(let i=1;i<=11;i++){
-        const el = document.getElementById('q'+i+'Select') || document.getElementById('q'+i+'Input');
-        formData['q'+i] = el.value.trim();
-      }
+  // Collect all answers
+  for (let i = 1; i <= 11; i++) {
+    const el = document.getElementById('q' + i + 'Select') || document.getElementById('q' + i + 'Input');
+    if (el) form.append("q" + i, el.value.trim());
+  }
+
+  // Send to Google Apps Script
+  fetch("https://script.google.com/macros/s/AKfycbw428ag6Yr8nC6fdUesv5mTzdPqjKobD_I-a1k9tXYjAGgT4RqHPsq4ZIUA6NV3fxYe6A/exec", {
+    method: "POST",
+    body: form
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.result === "success") {
+      document.getElementById('q12').classList.remove('active');
+      document.getElementById('thanks').style.display = 'block';
+      updateProgress(totalQuestions);
+      sendHeight();
+    } else {
+      alert("Error sending data. Check console.");
+      console.log(data.error);
+    }
+  })
+  .catch(err => {
+    alert("Error sending data. Check console.");
+    console.log(err);
+  });
+}
+
 
       fetch("https://script.google.com/macros/s/AKfycbw428ag6Yr8nC6fdUesv5mTzdPqjKobD_I-a1k9tXYjAGgT4RqHPsq4ZIUA6NV3fxYe6A/exec", {
   method: "POST",
