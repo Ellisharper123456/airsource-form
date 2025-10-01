@@ -266,10 +266,10 @@
       } else {
         document.getElementsByClassName('step')[currentStep-1].classList.remove('active');
       }
-
       document.getElementById(stepId).classList.add('active');
       currentStep++;
       updateProgress(currentStep);
+      sendHeight();
     }
 
     function updateProgress(step) {
@@ -297,52 +297,42 @@
       formData['email'] = email;
 
       // Collect all answers
-      formData['q1'] = document.getElementById('q1Select').value;
-      formData['q2'] = document.getElementById('q2Select').value;
-      formData['q3'] = document.getElementById('q3Select').value;
-      formData['q4'] = document.getElementById('q4Select').value;
-      formData['q5'] = document.getElementById('q5Select').value;
-      formData['q6'] = document.getElementById('q6Select').value;
-      formData['q7'] = document.getElementById('q7Select').value;
-      formData['q8'] = document.getElementById('q8Select').value;
-      formData['q9'] = document.getElementById('q9Input').value.trim();
-      formData['q10'] = document.getElementById('q10Input').value.trim();
-      formData['q11'] = document.getElementById('q11Select').value;
+      for(let i=1;i<=11;i++){
+        const el = document.getElementById('q'+i+'Select') || document.getElementById('q'+i+'Input');
+        formData['q'+i] = el.value.trim();
+      }
 
-      fetch("https://script.google.com/macros/s/AKfycbyTHc1cvso0yZ39_CFLp_6tihxAlKau25NV35aRnTR-HaVNOyxsDoPLPfCrhGdk5zo3eg/exec", {
+      fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
         method: "POST",
         body: JSON.stringify(formData)
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
-        if(data.result === "success") {
+        if(data.result === "success"){
           document.getElementById('q12').classList.remove('active');
           document.getElementById('thanks').style.display = 'block';
           updateProgress(totalQuestions);
+          sendHeight();
         } else {
           alert("Error sending data. Check console.");
-          console.log("Error details:", data.error);
+          console.log(data.error);
         }
       })
-      .catch(err => {
-        alert("Error sending data. Check console.");
-        console.log(err);
-      });
+      .catch(err => { alert("Error sending data. Check console."); console.log(err); });
     }
-  </script>
-  <iframe id="ashpForm" src="https://yourusername.github.io/airsource-form/?v=2" 
-        width="100%" 
-        style="border:none;" 
-        scrolling="no">
-</iframe>
 
-<script>
-  // Listen for height messages from iframe
-  window.addEventListener("message", (event) => {
-    if(event.data.iframeHeight) {
-      document.getElementById("ashpForm").style.height = event.data.iframeHeight + "px";
+    // ---------------- Auto-resize for Carrd ----------------
+    function sendHeight() {
+      const height = document.body.scrollHeight;
+      if(window.parent){
+        window.parent.postMessage({iframeHeight: height}, "*");
+      }
     }
-  });
-</script>
+
+    window.addEventListener('load', sendHeight);
+    const steps = document.querySelectorAll('.step, #welcome, #thanks');
+    steps.forEach(step => { step.addEventListener('transitionend', sendHeight); });
+
+  </script>
 </body>
 </html>
