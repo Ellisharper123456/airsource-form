@@ -256,112 +256,89 @@
   </div>
 
   <script>
-    const totalQuestions = 12;
-    let currentStep = 0;
-    let formData = {};
+  const totalQuestions = 12;
+  let currentStep = 0;
 
-    function nextStep(stepId) {
-      if(currentStep === 0) {
-        document.getElementById('welcome').style.display = 'none';
-      } else {
-        document.getElementsByClassName('step')[currentStep-1].classList.remove('active');
-      }
-      document.getElementById(stepId).classList.add('active');
-      currentStep++;
-      updateProgress(currentStep);
-      sendHeight();
+  function nextStep(stepId) {
+    if (currentStep === 0) {
+      document.getElementById('welcome').style.display = 'none';
+    } else {
+      document.getElementsByClassName('step')[currentStep - 1].classList.remove('active');
     }
-
-    function updateProgress(step) {
-      const progress = (step / totalQuestions) * 100;
-      document.getElementById('progress').style.width = progress + '%';
-    }
-
-    function submitForm() {
-  let fname = document.getElementById('fname').value.trim();
-  let lname = document.getElementById('lname').value.trim();
-  let phone = document.getElementById('phone').value.trim();
-  let email = document.getElementById('email').value.trim();
-
-  // Validation
-  let phoneRegex = /^(?:0\d{10}|\+44\d{10})$/;
-  if (!phoneRegex.test(phone)) { alert("Please enter a valid UK phone number."); return; }
-
-  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) { alert("Please enter a valid email address."); return; }
-
-  if (!fname || !lname) { alert("Please enter your first and last name."); return; }
-
-  // Build form data
-  let form = new FormData();
-  form.append("fname", fname);
-  form.append("lname", lname);
-  form.append("phone", phone);
-  form.append("email", email);
-
-  // Collect all answers
-  for (let i = 1; i <= 11; i++) {
-    const el = document.getElementById('q' + i + 'Select') || document.getElementById('q' + i + 'Input');
-    if (el) form.append("q" + i, el.value.trim());
+    document.getElementById(stepId).classList.add('active');
+    currentStep++;
+    updateProgress(currentStep);
+    sendHeight();
   }
 
-  // Send to Google Apps Script
-  fetch("https://script.google.com/macros/s/AKfycbw428ag6Yr8nC6fdUesv5mTzdPqjKobD_I-a1k9tXYjAGgT4RqHPsq4ZIUA6NV3fxYe6A/exec", {
-    method: "POST",
-    body: form
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.result === "success") {
-      document.getElementById('q12').classList.remove('active');
-      document.getElementById('thanks').style.display = 'block';
-      updateProgress(totalQuestions);
-      sendHeight();
-    } else {
-      alert("Error sending data. Check console.");
-      console.log(data.error);
-    }
-  })
-  .catch(err => {
-    alert("Error sending data. Check console.");
-    console.log(err);
-  });
-}
+  function updateProgress(step) {
+    const progress = (step / totalQuestions) * 100;
+    document.getElementById('progress').style.width = progress + '%';
+  }
 
+  function submitForm() {
+    let fname = document.getElementById('fname').value.trim();
+    let lname = document.getElementById('lname').value.trim();
+    let phone = document.getElementById('phone').value.trim();
+    let email = document.getElementById('email').value.trim();
 
-      fetch("https://script.google.com/macros/s/AKfycbw428ag6Yr8nC6fdUesv5mTzdPqjKobD_I-a1k9tXYjAGgT4RqHPsq4ZIUA6NV3fxYe6A/exec", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(formData)
-})
+    // Validation
+    let phoneRegex = /^(?:0\d{10}|\+44\d{10})$/;
+    if (!phoneRegex.test(phone)) { alert("Please enter a valid UK phone number."); return; }
 
-      .then(res => res.json())
-      .then(data => {
-        if(data.result === "success"){
-          document.getElementById('q12').classList.remove('active');
-          document.getElementById('thanks').style.display = 'block';
-          updateProgress(totalQuestions);
-          sendHeight();
-        } else {
-          alert("Error sending data. Check console.");
-          console.log(data.error);
-        }
-      })
-      .catch(err => { alert("Error sending data. Check console."); console.log(err); });
+    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) { alert("Please enter a valid email address."); return; }
+
+    if (!fname || !lname) { alert("Please enter your first and last name."); return; }
+
+    // Build form data
+    let form = new FormData();
+    form.append("fname", fname);
+    form.append("lname", lname);
+    form.append("phone", phone);
+    form.append("email", email);
+
+    // Collect all answers
+    for (let i = 1; i <= 11; i++) {
+      const el = document.getElementById('q' + i + 'Select') || document.getElementById('q' + i + 'Input');
+      if (el) form.append("q" + i, el.value.trim());
     }
 
-    // ---------------- Auto-resize for Carrd ----------------
-    function sendHeight() {
-      const height = document.body.scrollHeight;
-      if(window.parent){
-        window.parent.postMessage({iframeHeight: height}, "*");
+    // Send to Google Apps Script
+    fetch("https://script.google.com/macros/s/AKfycbw428ag6Yr8nC6fdUesv5mTzdPqjKobD_I-a1k9tXYjAGgT4RqHPsq4ZIUA6NV3fxYe6A/exec", {
+      method: "POST",
+      body: form
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.result === "success") {
+        document.getElementById('q12').classList.remove('active');
+        document.getElementById('thanks').style.display = 'block';
+        updateProgress(totalQuestions);
+        sendHeight();
+      } else {
+        alert("Error sending data. Check console.");
+        console.log(data.error);
       }
+    })
+    .catch(err => {
+      alert("Error sending data. Check console.");
+      console.log(err);
+    });
+  }
+
+  // ---------------- Auto-resize for Carrd ----------------
+  function sendHeight() {
+    const height = document.body.scrollHeight;
+    if (window.parent) {
+      window.parent.postMessage({ iframeHeight: height }, "*");
     }
+  }
 
-    window.addEventListener('load', sendHeight);
-    const steps = document.querySelectorAll('.step, #welcome, #thanks');
-    steps.forEach(step => { step.addEventListener('transitionend', sendHeight); });
+  window.addEventListener('load', sendHeight);
+  const steps = document.querySelectorAll('.step, #welcome, #thanks');
+  steps.forEach(step => { step.addEventListener('transitionend', sendHeight); });
+</script>
 
-  </script>
 </body>
 </html>
