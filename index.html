@@ -330,5 +330,19 @@
       });
     }
   </script>
+  <iframe id="ashpForm" src="https://yourusername.github.io/airsource-form/?v=2" 
+        width="100%" 
+        style="border:none;" 
+        scrolling="no">
+</iframe>
+
+<script>
+  // Listen for height messages from iframe
+  window.addEventListener("message", (event) => {
+    if(event.data.iframeHeight) {
+      document.getElementById("ashpForm").style.height = event.data.iframeHeight + "px";
+    }
+  });
+</script>
 </body>
 </html>
