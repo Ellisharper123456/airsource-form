@@ -302,10 +302,12 @@
         formData['q'+i] = el.value.trim();
       }
 
-      fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
-        method: "POST",
-        body: JSON.stringify(formData)
-      })
+      fetch("https://script.google.com/macros/s/AKfycbw428ag6Yr8nC6fdUesv5mTzdPqjKobD_I-a1k9tXYjAGgT4RqHPsq4ZIUA6NV3fxYe6A/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(formData)
+})
+
       .then(res => res.json())
       .then(data => {
         if(data.result === "success"){
